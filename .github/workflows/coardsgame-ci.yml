@@ -12,30 +12,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout project
+      # Checkout (without LFS)
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Unity
-        uses: game-ci/unity-installer@v3
-        with:
-          unityVersion: 2022.3.24f1  # Ton numéro de version
+      # Git LFS
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
+      - name: Restore LFS cache
+        uses: actions/cache@v3
+        id: lfs-cache
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+
+      - name: Git LFS Pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+
+      # Cache
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Run build of project
       - name: Build project
         uses: game-ci/unity-builder@v3
+	env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows64  # Ou WebGL, Android...
 
+      # Build output
       - name: Upload Build
         uses: actions/upload-artifact@v4
         with:
           name: Build
-          path: build/Windows64  # Répertoire du build généré
+          path: build  # Répertoire du build généré
 
+      # Tests
       - name: Run Unity Tests
-        uses: game-ci/unity-test-runner@v3
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          testMode: all
+          unityVersion: 2022.3.24f1
+          projectPath: C://Users/kavne/Test_CI_Pipeline
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+	  artifactsPath: test-artifacts
 	
+      # Tests output
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
