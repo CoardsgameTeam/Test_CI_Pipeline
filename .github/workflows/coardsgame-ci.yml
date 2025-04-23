@@ -41,6 +41,11 @@ jobs:
           restore-keys: |
             Library-
 
+      - name: Activate Unity (Personal Mode)
+        uses: game-ci/unity-activate@v3
+        with:
+          activateLicense: false
+
       # Run build of project
       - name: Build project
         uses: game-ci/unity-builder@v4
