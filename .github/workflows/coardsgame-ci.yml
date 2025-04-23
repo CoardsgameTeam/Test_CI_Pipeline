@@ -1,0 +1,43 @@
+name: Unity CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    name: Build Unity Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Set up Unity
+        uses: game-ci/unity-installer@v3
+        with:
+          unityVersion: 2022.3.24f1  # Ton numéro de version
+
+      - name: Build project
+        uses: game-ci/unity-builder@v3
+        with:
+          targetPlatform: StandaloneWindows64  # Ou WebGL, Android...
+
+      - name: Upload Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build
+          path: build/Windows64  # Répertoire du build généré
+
+      - name: Run Unity Tests
+        uses: game-ci/unity-test-runner@v3
+        with:
+          testMode: all
+	
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults
+          path: artifacts
