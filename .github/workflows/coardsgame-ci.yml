@@ -50,6 +50,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows64 # Ou WebGL, Android...
+          customParameters: -logFile build.log
 
       # Build output
       - name: Upload Build
