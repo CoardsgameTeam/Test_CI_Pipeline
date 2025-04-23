@@ -43,8 +43,8 @@ jobs:
 
       # Run build of project
       - name: Build project
-        uses: game-ci/unity-builder@v3
-	env:
+        uses: game-ci/unity-builder@v4
+        env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -69,7 +69,7 @@ jobs:
           unityVersion: 2022.3.24f1
           projectPath: C://Users/kavne/Test_CI_Pipeline
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-	  artifactsPath: test-artifacts
+          artifactsPath: test-artifacts
 	
       # Tests output
       - name: Upload Test Results
