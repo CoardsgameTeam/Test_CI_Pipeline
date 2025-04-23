@@ -49,14 +49,14 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          targetPlatform: StandaloneWindows64  # Ou WebGL, Android...
+          targetPlatform: StandaloneWindows64 # Ou WebGL, Android...
 
       # Build output
       - name: Upload Build
         uses: actions/upload-artifact@v4
         with:
           name: Build
-          path: build  # Répertoire du build généré
+          path: build # Répertoire du build généré
 
       # Tests
       - name: Run Unity Tests
@@ -70,7 +70,7 @@ jobs:
           projectPath: C://Users/kavne/Test_CI_Pipeline
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           artifactsPath: test-artifacts
-	
+
       # Tests output
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
