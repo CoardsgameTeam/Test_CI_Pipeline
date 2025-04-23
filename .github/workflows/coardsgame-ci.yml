@@ -67,7 +67,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 2022.3.24f1
-          projectPath: C://Users/kavne/Test_CI_Pipeline
+          projectPath: './'
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           artifactsPath: test-artifacts
 
